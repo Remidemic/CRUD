@@ -7,6 +7,7 @@ const School = require("./models/Schools");
 const Todo = require("./models/Todos");
 const Career = require("./models/careers");
 const Vacation = require("./models/Vacations");
+const Trial = require("./models/Trials");
 const mongoose = require("mongoose");
 // --->Create Mongo SCHEMA*
 
@@ -255,7 +256,6 @@ app.get("/schools/:id", (req, res) => {
     });
 });
 
-
 // ------- TODO ROUTES ------------//
 
 // --------->Index TODO [Dashboard/ShowAll]
@@ -356,8 +356,6 @@ app.get("/todos/:id", (req, res) => {
         });
     });
 });
-
-
 
 //  ------------ CAREER ROUTES ------------///
 
@@ -570,6 +568,115 @@ app.get("/vacations/:id", (req, res) => {
         });
     });
 });
+
+
+// -------Trial Model-------//
+
+app.get("/trials", (req, res) => {
+    Trial.find({}, (err, alltrials) => {
+        console.log(err);
+
+        res.render("Index_trial", {
+            trials: alltrials,
+        });
+    });
+});
+// --------->New trials  [C]
+app.get("/trials/new_trial", (req, res) => {
+    res.render("New_trial", {});
+});
+// --------> POST trials
+app.post("/trials", (req, res) => {
+    // req.body.tuition = +req.body.tuition
+    Trial.create(req.body, (err, createdVacation) => {
+        console.log(err);
+        console.log("Just Added : ", createdVacation);
+    });
+    res.redirect("/trials");
+});
+// -------> Edit Vacation
+app.get("/trials/:id/edit", (req, res) => {
+    Trial.findById(req.params.id, (err, foundTrial) => {
+        //findLog
+        console.log(err)
+        if (!err) {
+            res.render("edit_trial", {
+                trial: foundTrial,
+                //pass in the foundVacation so we can prefill the form
+            });
+        } else {
+            res.send({ msg: err.message });
+        }
+    });
+});
+// --------->PUT/PATCH Todo [U]
+app.put("/trials/:id", (req, res) => {
+
+    Trial.findByIdAndUpdate(req.params.id, req.body, (err, updatedTrial) => {
+        console.log(err)
+        console.log(updatedTrial);
+        res.redirect(`/trials/${req.params.id}`);
+    });
+});
+// ------>DELETE Vacat  [D]
+app.delete("/trials/:id", (req, res) => {
+    Trial.findByIdAndRemove(req.params.id, (err, data) => {
+        res.redirect("/trials");
+    });
+});
+// --------> trials SEED*
+app.get("/trials/seed", (req, res) => {
+    console.log(Trial);
+    Trial.create(
+        [{
+
+
+
+                location: "Guam",
+                country: "USA",
+                duration: 5,
+                photo: "https://i.natgeofe.com/k/82dbec7a-1caa-4e62-8e17-27bca5de0705/Reef_Guam_Kids_02-21_16x9.jpg",
+                hasbeen: false
+
+            },
+            {
+                location: "Guam",
+                country: "USA",
+                duration: 5,
+                photo: "https://i.natgeofe.com/k/82dbec7a-1caa-4e62-8e17-27bca5de0705/Reef_Guam_Kids_02-21_16x9.jpg",
+                hasbeen: false
+
+            },
+            {
+                location: "Guam",
+                country: "USA",
+                duration: 5,
+                photo: "https://i.natgeofe.com/k/82dbec7a-1caa-4e62-8e17-27bca5de0705/Reef_Guam_Kids_02-21_16x9.jpg",
+                hasbeen: false
+
+            },
+        ],
+        (err, data) => {
+            res.redirect("/trials");
+        }
+    );
+});
+// --------->Show [R]
+app.get("/trials/:id", (req, res) => {
+    Trial.findById(req.params.id, (err, foundTrial) => {
+        console.log(err)
+        console.log("Found: ", foundTrial);
+        res.render("Show_Vacation", {
+            trial: foundTrial,
+
+
+            // you spent an hour looking for that now lowercase TODO on line 351
+        });
+    });
+});
+
+// -------Trial Model end ---//
+
 
 
 

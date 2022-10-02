@@ -35,6 +35,9 @@ class Index_User extends React.Component{
                     <a href="/vacations">Vacations List</a>
                     <br />
                     <br />
+                    <a href="/trials">Trials List</a>
+                    <br />
+                    <br />
 
                 </body>
             </html>
